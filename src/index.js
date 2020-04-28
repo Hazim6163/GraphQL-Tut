@@ -1,6 +1,6 @@
 const { GraphQLServer } = require('graphql-yoga');
 
-const links = [
+let links = [
     { id: 'link-0', des: 'Google', url: 'www.google.com' },
     { id: 'link-1', des: 'facebook', url: 'www.facebook.com' }
 ]
@@ -32,6 +32,11 @@ const resolvers = {
             const link = links.find(e => e.id === args.id);
             link.des = args.des;
             link.url = args.url;
+            return link;
+        },
+        deleteLink: (parent, args) => {
+            const link = links.find(e => e.id === args.id);
+            links = links.filter(e => e.id !== args.id);
             return link;
         }
     }
