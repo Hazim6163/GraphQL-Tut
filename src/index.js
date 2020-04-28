@@ -1,7 +1,8 @@
 const {GraphQLServer} = require('graphql-yoga');
 
 const links = [
-    {id:'link-0', des: 'some random link', url: 'www.google.com'}
+    {id:'link-0', des: 'Google', url: 'www.google.com'},
+    {id:'link-1', des: 'facebook', url: 'www.facebook.com'}
 ]
 
 let id = links.length;
@@ -9,7 +10,13 @@ let id = links.length;
 const resolvers = {
     Query: {
       info: () => `Hello World`,
-      feed: () => links
+      feed: () => links,
+      link: (parent, args) => {
+          const link = links.find(e => {
+              return e.id === args.id
+          })
+          return link;
+      }
     },
     Mutation: {
         post: (parent, args) => {

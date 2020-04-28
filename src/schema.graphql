@@ -2,6 +2,8 @@ type Query {
   info: String!
   """list of links"""
   feed: [Link!]!
+  """Get single Link by It's ID"""
+  link(id: ID!): Link!
 }
 
 type Mutation{
