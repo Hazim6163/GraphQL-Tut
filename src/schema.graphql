@@ -1,3 +1,14 @@
 type Query {
   info: String!
+  """list of links"""
+  feed: [Link!]!
+}
+
+type Link {
+    """Auto gernated by the Database"""
+    id: ID!
+    """Link Description"""
+    des: String!
+    """Link URL"""
+    url: String!
 }
