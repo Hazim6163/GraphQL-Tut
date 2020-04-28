@@ -27,6 +27,12 @@ const resolvers = {
             }
             links.push(link);
             return link;
+        },
+        updateLink: (parent, args) => {
+            const link = links.find(e => e.id === args.id);
+            link.des = args.des; 
+            link.url = args.url;
+            return link;
         }
     }
 }
