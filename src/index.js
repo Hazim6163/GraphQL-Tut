@@ -1,51 +1,42 @@
 const { GraphQLServer } = require('graphql-yoga');
-
-let links = [
-    { id: 'link-0', des: 'Google', url: 'www.google.com' },
-    { id: 'link-1', des: 'facebook', url: 'www.facebook.com' }
-]
-
-let id = links.length;
+const { prisma } = require('./generated/prisma-client');
 
 const resolvers = {
     Query: {
-        info: () => `Hello World`,
-        feed: () => links,
-        link: (parent, args) => {
-            const link = links.find(e => {
-                return e.id === args.id
-            })
-            return link;
-        }
+        info: () => `This is the API of a Hacker news Clone`,
+        feed: (root, args, context, info) => {
+            return context.prisma.links()
+        },
     },
     Mutation: {
-        post: (parent, args) => {
-            const link = {
-                id: `link-${id++}`,
-                des: args.des,
-                url: args.url
-            }
-            links.push(link);
-            return link;
+        post: (root, args, context) => {
+            return context.prisma.createLink({
+                url: args.url,
+                description: args.description,
+            })
         },
-        updateLink: (parent, args) => {
-            const link = links.find(e => e.id === args.id);
-            link.des = args.des;
-            link.url = args.url;
-            return link;
+        deleteLink(root, args, context) {
+            return context.prisma.deleteLink({
+                id: args.id
+            })
         },
-        deleteLink: (parent, args) => {
-            const link = links.find(e => e.id === args.id);
-            links = links.filter(e => e.id !== args.id);
-            return link;
+        updateLink(root, args, context) {
+            return context.prisma.updateLink({
+                data: {
+                    url: args.url,
+                    description: args.description
+                },
+                where: { id: args.id }
+            })
         }
-    }
+    },
 }
 
 
 const server = new GraphQLServer({
     typeDefs: './src/schema.graphql',
-    resolvers
+    resolvers,
+    context: { prisma },
 })
 
 server.start(() => {
