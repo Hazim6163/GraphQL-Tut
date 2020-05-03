@@ -1,4 +1,5 @@
 const APP_SECRET = 'Some-Random-Secret-12-!@&';
+const jwt = require('jsonwebtoken');
 
 // helper function to get the user id from the request
 function getUserId(context) {
