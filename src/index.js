@@ -36,7 +36,13 @@ const resolvers = {
 const server = new GraphQLServer({
     typeDefs: './src/schema.graphql',
     resolvers,
-    context: { prisma },
+    // access the request and prisma from the context obj
+    context: request => {
+        return {
+            ...request,
+            prisma
+        }
+    },
 })
 
 server.start(() => {
