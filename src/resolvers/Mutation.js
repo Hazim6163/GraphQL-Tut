@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { APP_SECRET } = require('../utils')
+const { APP_SECRET, getUserId } = require('../utils')
 
 //signup resolver
 async function signup(parent, args, context, info) {
@@ -34,6 +34,17 @@ async function login(parent, args, context, info) {
         token,
         user,
     }
+}
+
+//authenticated post link resolver
+function post(parent, args, context, info) {
+    const userId = getUserId(context);
+    return context.prisma.createLink({
+        url: args.url,
+        description: args.description,
+        // nested obj write -> (connect) the user into the link
+        postedBy: { connect: { id: userId } },
+    })
 }
 
 module.exports = {
